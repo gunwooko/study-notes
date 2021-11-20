@@ -40,3 +40,34 @@
 # Vi editor
 
 - 에티터 사용하기: `vi` 입력후 그리고 엔터
+
+# Package manager
+
+패키지란 프로그램이고, 이런 패키지를 관리, 설치하는 소프트웨어들을 패키지매니저라 부른다.
+리눅스의 대표적 패키지 매니저는 `apt` 혹은 `yum`이 있다.
+
+- 아래 명령어는 sudo가 필요하다.
+- `apt-get update`: 최신 상태의 소프트웨어 목록을 다운 받는다. 소프트웨어가 아니다.
+- `apt-cache search 프로그램명`: 해당 프로그램을 찾아 준다.
+- `apt-get install 프로그램명`: 해당 프로그램을 찾아 준다.
+- `apt-get upgrade 프로그램명`: 해당 프로그램을 업그레이드 해준다.
+- `apt-get upgrade`: `apt-get`을 통해 설치한 모든 프로그램을 최신 상태와 비교해서 업그레이드 해준다.
+- `apt-get remove 프로그램명`: 해당 프로그램을 삭제해준다.
+
+Mac OS에서는 `homebrew`가 있다(osX). https://brew.sh/ 로 들어가서 설치하고 사용할 수 있다.
+
+- `brew help`: homebrew에 대한 기본적인 명령어를 출력한다.
+- `brew search 프로그램명`: 해당 프로그램이 brew를 통해 설치할 수 있는지 확인할 수 있다.
+- `brew install 프로그램명`: 해당 프로그램을 다운로드해준다.
+- `brew list`: 컴퓨터에 설치된 프로그램 리스트를 보여준다.
+- `brew uninstall 프로그램명`: 해당 프로그램을 삭제해준다.
+- `brew upgrade 프로그램명`: 해당 프로그램을 업그레이드 해준다.
+- `brew upgrade`: 모든 프로그램를 업그레이드 해준다.
+- `brew update`: 설치할 수 있는 프로그램 목록을 최신 상태로 해준다.
+
+# URL를 통해서 파일 다운로드 받기
+
+`wget`이란 명령어를 통해 가능하다.
+
+- `wget 해당URL`: 다운로드
+- `wget --help`: 도움말
