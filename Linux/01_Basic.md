@@ -29,6 +29,7 @@
 - `sudo`: (superuser do) 유닉스 계열의 운영체제에서 중요한 특징 중 하나가 다중시스템이다. 다양한 사용자가 하나의 운영체제를 가지고 사용하다보니, 권한(permission)을 누구에게 위임해주는지가 중요했다. 이런 사회에서 가장 큰 권한을 가지고 있는 유저가 superuser 혹은 root user 라고 한다. 그러나 항상 superuser로 활동하는 것은 위험할 수 있기 때문에, 보통 유저로 활동하다가 필요할때마다 superuser의 권한으로 실행하는 것이다.
   ex) `apt-get install git` 깃을 설치하라는 명령어 => Permission denied 에러가 나오게 된다. 권한이 없다.
   `sudo apt-get install git` => 앞에 `sudo` 를 붙여줌으로 superuser의 권한으로 실행하라는 명령어 이다.
+- `cat 파일명`: 해당 파일 열기
 
 # Nano editer
 
