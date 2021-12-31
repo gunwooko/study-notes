@@ -1,4 +1,4 @@
 # Study notes
 
-- 테스트!
-- PR테스트
+- PR테스
+- pr 테스트2
