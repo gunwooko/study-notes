@@ -239,6 +239,14 @@ a와 b는 각각 x와 y의 값을 복제하여 가지게 된다. 즉, 서로 다
 
 스택에는 프로그램 내의 함수와 관련된 것들이 저장된다. 그리고 위로 쌓이게 된다.
 
+힙 영역에서는 malloc 에 의해 메모리가 더 할당될수록, 점점 사용하는 메모리의 범위가 아래로 늘어난다.
+
+마찬가지로 스택 영역에서도 함수가 더 많이 호출 될수록 사용하는 메모리의 범위가 점점 위로 늘어난다.
+
+이렇게 점점 늘어나다 보면 제한된 메모리 용량 하에서는 기존의 값을 침범하는 상황도 발생할 것이다.
+
+이를 힙 오버플로우 또는 스택 오버플로우라고 부른다.
+
 <img src="./assets/memory_layout.png" width="250">
 
 이를 바탕으로 다시 생각해보면, 위의 코드에서 a, b, x, y, tmp 모두 스택 영역에 저장되지만 a와 x, b와 y는 그 안에서도 서로 다른 위치에 저장된 변수이다.
@@ -276,4 +284,129 @@ void swap(int *a, int *b)
 
 ## 파일 쓰기
 
+### 사용자에게 입력받기
+
+```c
+// get int
+#include <stdio.h>
+
+int main(void)
+{
+    int x;
+    printf("x: ");
+    scanf("%i", &x);
+    printf("x: %i\n", x);
+}
+```
+
+```c
+// get string
+#include <stdio.h>
+
+int main(void)
+{
+    char s[5];
+    printf("s: ");
+    scanf("%s", s);
+    printf("s: %s\n", s);
+}
+
+```
+
+위 코드들에서 scanf라는 함수는 사용자로부터 형식 지정자에 해당되는 값을 입력받아 저장하는 함수이다.
+
+get_int 코드에서 int x를 정의한 후에 scanf에 s가 아닌 &s로 그 주소를 입력해주는 부분을 보면,
+scanf 함수의 변수가 실제로 스택 영역 안에 s가 저장된 주소로 찾아가서 사용자가 입력한 값을 저장하도록 하기 위함이다.
+
+반면 get_string 코드에서는 scanf에 그대로 s를 입력해줬다.
+
+그 이유는 s를 크기가 5인 문자열, 즉 크기가 5인 char 자료형의 배열로 정의하였기 때문이다.
+clang 컴파일러는 문자 배열의 이름을 포인터처럼 다룹니다. 즉 scanf에 s라는 배열의 첫 바이트 주소를 넘겨주는 것이다.
+
+### 파일쓰기
+
+```c
+#include <cs50.h>
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+    // Open file
+    FILE *file = fopen("phonebook.csv", "a");
+
+    // Get string from user
+    char *name = get_string("Name: ");
+    char *number = get_string("Number: ");
+
+    // Print (write) strings to file
+    fprintf(file, "%s,%s\n", name, number);
+
+    // Close file
+    fclose(file);
+}
+```
+
+fopen이라는 함수를 이용하면 파일을 FILE이라는 자료형으로 불러올 수 있다.
+fopen 함수의 첫번째 인자는 파일의 이름, 두번째 인자는 모드로 r은 읽기, w는 쓰기, a는 덧붙이기를 의미한다.
+
+사용자에게 name과 number라는 문자열을 입력 받고, 이를 fprintf 함수를 이용하여 printf에서처럼 파일에 직접 내용을 출력할 수 있다.
+
+작업이 끝난 후에는 fclose함수로 파일에 대한 작업을 종료해줘야 합니다.
+
 ## 파일 읽기
+
+```c
+// 아래 코드는 파일 내용을 읽어서 파일의 형식이 JPEG 이미지인지를 검사하는 프로그램이다.
+#include <stdio.h>
+
+int main(int argc, char *argv[])
+{
+    if (argc != 2)
+    {
+        return 1;
+    }
+
+    // Open file
+    FILE *file = fopen(argv[1], "r");
+
+    if (file == NULL)
+    {
+        return 1;
+    }
+    // Read 3 bytes from file
+    // unsigned because -128부터 127까지의 값이 아닌, 0부터 255 범위의 값을 의미한다
+    unsigned char bytes[3];
+    fread(bytes, 3, 1, file);
+
+    // Check if bytes are 0xff 0xd8 0xff
+    if (bytes[0] == 0xff && bytes[1] == 0xd8 && bytes[2] == 0xff)
+    {
+        printf("Maybe\n");
+    }
+    else
+    {
+        printf("No\n");
+    }
+    fclose(file);
+}
+```
+
+위 코드에서 main 함수를 보면 사용자로부터 입력을 받는 것을 알 수 있다.
+여기서는 파일의 이름을 입력으로 받을 예정이다.
+
+만약 argc가 2가 아니라면, 파일명이 입력되지 않았거나 파일명 외의 다른 인자가 입력되었기 때문에 1(오류)을 리턴하고 프로그램을 종료한다.
+만약 argc가 2라면 프로그램이 그대로 진행된다.
+
+입력받은 파일명(argv[1])을 ‘읽기(r)’ 모드로 불러온다.
+만약 파일이 제대로 열리지 않으면 fopen 함수는 NULL을 리턴하기 때문에 이를 검사해서 file을 제대로 쓸 수 있는지를 검사하고, 아니라면 역시 1(오류)를 리턴하고 프로그램을 종료한다.
+만약 파일이 잘 열렸다면, 프로그램이 계속 진행된다.
+
+그 후 크기가 3인 문자 배열을 만들고, fread 함수를 이용해서 파일에서 첫 3바이트를 읽어온다.
+fread 함수의 각 인자는 (배열, 읽을 바이트 수, 읽을 횟수, 읽을 파일)을 의미한다.
+
+그리고 마지막으로 읽어들인 각 바이트가 각각 0xFF, 0xD8, 0xFF 인지를 확인한다.
+이는 JPEG 형식의 파일을 정의할 때 만든 약속으로, JPEG 파일의 시작점에 꼭 포함되어 있어야 한다.
+따라서 이를 검사하면 JPEG 파일인지를 확인할 수 있다.
+
+JPEG 외에 다른 파일 형식도 그 형식임을 알려주는 약속이 있다.
