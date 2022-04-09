@@ -255,7 +255,7 @@ a와 b는 각각 x와 y의 값을 복제하여 가지게 된다. 즉, 서로 다
 
 아래 그림 및 코드와 같이 a와 b를 각각 x와 y를 가리키는 포인터로 지정함으로써 이 문제를 쉽게 해결할 수 있다.
 
-<img src="../assets/pointers.png" width="250">
+<img src="./assets/pointers.png" width="250">
 
 ```c
 #include <stdio.h>
