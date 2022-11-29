@@ -1,0 +1,44 @@
+<html>
+<script>
+
+function playSound() {
+  const context = new AudioContext();
+
+  const seconds = 2;
+  const volume = 0.2;
+  const tone = 440;
+
+  // Create a buffer of floating points
+  const bufferLength = Math.floor(context.sampleRate * seconds);
+  const buffer = new Float32Array(bufferLength);
+
+
+  
+  for (let i = 0; i < bufferLength; i++) {
+    // fill it with the output of Math.sin()
+    const sampleFreq = context.sampleRate / tone
+    buffer[i] = Math.sin(i / (sampleFreq / (Math.PI * 2))) + 1.55;
+
+    // Fill it with random numbers
+    // buffer[i] = Math.random();
+
+    //Fill it with zeros
+    // buffer[i] = 0;
+  }
+
+  // Use the WebAudio API to play the buffer
+  const output = context.createBuffer(1, buffer.length, context.sampleRate)
+  output.copyToChannel(buffer, 0);
+  const source = context.createBufferSource();
+  source.buffer = output;
+  source.connect(context.destination);
+  source.start(0);
+}
+
+</script>
+
+<body>
+  <button onclick="playSound()">Play</button>
+</body>
+
+</html>
